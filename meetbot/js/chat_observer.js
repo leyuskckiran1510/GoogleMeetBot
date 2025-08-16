@@ -1,6 +1,6 @@
 // https://dom.spec.whatwg.org/#mutationrecord
-let container = document.querySelector('aside[aria-label="Side panel"]');
-let config = { attributes: false, childList: true, subtree: true };
+container = document.querySelector('aside[aria-label="Side panel"]');
+config = { attributes: false, childList: true, subtree: true };
 window.__new_message = JSON.stringify({
     user:null,
     content:null,
@@ -8,16 +8,17 @@ window.__new_message = JSON.stringify({
 })
 
 
-let CLASSES_ = { user: "poVWob", "content": "dTKtvb"}
+CLASSES_ = { user: "poVWob", "content": "dTKtvb"}
 
-let mutation_callback = (mutations)=>{
-    let user = null;
-    let content = null;
-    let msg_id = null;
-    let content_node = null;
+if (container) {
+    const observer = new MutationObserver((mutations)=>{
+    user = null;
+    content = null;
+    msg_id = null;
+    content_node = null;
     mutations= mutations.filter(x=>x.type=="childList");
     for(mutation of mutations){
-        let target = mutation.target;
+        target = mutation.target;
         // CLASSES_.user
         if(target.className.match("poVWob")!=null){
             user = target.innerText;
@@ -25,7 +26,7 @@ let mutation_callback = (mutations)=>{
         if(target.getAttribute("data-message-id")!=null){
             msg_id = target.getAttribute("data-message-id")
             // CLASSES_.content
-            let msg_container = target.querySelector('[jsname="dTKtvb"]');
+            msg_container = target.querySelector('[jsname="dTKtvb"]');
             if(msg_container){
                 content = msg_container.innerText;
                 content_node  = target;
@@ -46,8 +47,6 @@ let mutation_callback = (mutations)=>{
             id:msg_id,
         })
     }
-}
-if (container) {
-    const observer = new MutationObserver(mutation_callback);
+});
     observer.observe(container, { childList: true, subtree: true });
 }

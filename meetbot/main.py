@@ -53,6 +53,8 @@ async def basic_interaction() -> None:
     await browser.connect()
 
     interactio = Interact(browser)
+    print(await interactio.get_peoples())
+    return
     commands = {
         "mute": interactio.toggle_mic,
         "cam": interactio.toggle_camera,
@@ -74,16 +76,16 @@ async def basic_interaction() -> None:
     }
     for name, func in commands.items():
         print(f"Executing... {name}")
-        await func()
+        print(await func())
         await asyncio.sleep(1)
         print("reverting toogles if present")
-        await func()
+        print(await func())
         print("Done.")
         await asyncio.sleep(1)
 
     for name, func in reactions.items():
         print(f"Reacting... {name}")
-        await func()
+        print("Success: ", await func())
         print("Done.")
         await asyncio.sleep(1)
 

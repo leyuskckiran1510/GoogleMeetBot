@@ -1,13 +1,11 @@
 from base64 import b64encode
 from json import loads
-from pathlib import Path
 
-from meetbot.exception import ChatObserverScriptNotFound
+from meetbot.exception import ChatMessageSendException, ChatObserverScriptNotFound
 from meetbot.type_hints import ChatResponse
+from meetbot.utils import load_js
 
 from .browser import BrowserController
-
-MY_DIR = Path(__file__).parent
 
 
 class ChatManager:
@@ -21,13 +19,14 @@ class ChatManager:
         if is_injected == "true":
             print("already injected so skipping")
             return
-        observer_script = MY_DIR / "chat_observer.js"
-        if not observer_script.exists():
+        try:
+            script = load_js("chat_observer.js")
+            await self.browser.run_js("window.__injected=true;")
+            return await self.browser.run_js(script)
+        except FileNotFoundError as f:
             raise ChatObserverScriptNotFound(
-                f"Write your observer script at {observer_script}"
+                f"Write your observer script at 'chat_observer.js'.\n\t=>\t" + str(f)
             )
-        await self.browser.run_js("window.__injected=true;")
-        return await self.browser.run_js(observer_script.read_text())
 
     def get_messages(self) -> list[ChatResponse]:
         return [i for i in self.chat_messages_history.values()]
@@ -50,9 +49,14 @@ class ChatManager:
         return None
 
     async def send_message(self, msg: str) -> None:
-        chat_send_script = MY_DIR / "chat_sender.js"
-        await self.browser.run_js(
-            chat_send_script.read_text().replace(
-                "{{message}}", b64encode(msg.encode()).decode()
+        try:
+            script = load_js("chat_sender.js")
+            await self.browser.run_js(
+                script.replace("{{message}}", b64encode(msg.encode()).decode())
             )
-        )
+        except FileNotFoundError as f:
+            raise ChatMessageSendException(
+                "Failed to load 'chat_sender.js'.\n\t=>\t" + str(f)
+            )
+        except Exception:
+            raise ChatMessageSendException("Error while sending mesage to")
