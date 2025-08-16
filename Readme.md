@@ -7,6 +7,14 @@ A Google Meet automation bot that:
 
 It works by attaching to **Brave/Chrome** running in `--remote-debugging-port` mode via the Chrome DevTools Protocol.
 
+## Demo
+
+
+https://github.com/user-attachments/assets/00b8044e-442b-47ca-9a67-d90dc0e20e76
+
+
+
+
 ---
 
 ## Setup
