@@ -1,8 +1,12 @@
 import asyncio
+import builtins
 
+from meetbot import get_logger
 from meetbot.browser import BrowserController
 from meetbot.chat import ChatManager
 from meetbot.interact import Interact
+
+builtins.print = get_logger("meetbot").info
 
 
 async def let_other_control():
@@ -53,8 +57,6 @@ async def basic_interaction() -> None:
     await browser.connect()
 
     interactio = Interact(browser)
-    print(await interactio.get_peoples())
-    return
     commands = {
         "mute": interactio.toggle_mic,
         "cam": interactio.toggle_camera,
@@ -85,9 +87,12 @@ async def basic_interaction() -> None:
 
     for name, func in reactions.items():
         print(f"Reacting... {name}")
-        print("Success: ", await func())
+        print(("Success: ", await func()))
         print("Done.")
         await asyncio.sleep(1)
+
+    print(await interactio.get_peoples())
+    return
 
 
 async def messages_test():
