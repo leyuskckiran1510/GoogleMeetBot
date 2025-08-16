@@ -71,14 +71,15 @@ class Interact:
                 button?.click();
                 is_success = `${button!=null}`;
                 // toggle emoji palet
+                window.__emoji_is_success = is_success;
                 document.querySelector('button[aria-label="Send a reaction"][aria-pressed="true"]')?.click();
             },300);
-            window.__emoji_is_success = is_success;
         """.replace(
             "{emoji}", emoji
         )
         await self.browser.run_js(script)
-        return self.browser.run_js("window.__emoji_is_success") == True
+        await asyncio.sleep(0.4)
+        return await self.browser.run_js("window.__emoji_is_success") == "true"
 
     async def toggle_captions(self) -> Literal["caption on", "caption off"]:
         script = """
