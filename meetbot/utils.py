@@ -1,8 +1,7 @@
 from pathlib import Path
-from typing import Literal
 
 MY_DIR = Path(__file__).parent
-JS_DIR = MY_DIR / "jsa"
+JS_DIR = MY_DIR / "js"
 
 
 def load_js(file_name: str) -> str:
