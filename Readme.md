@@ -40,3 +40,46 @@ or
 ```bash
 make run
 ```
+
+
+## Usage Examples
+```py
+import asyncio
+
+from meetbot.browser import BrowserController
+from meetbot.chat import ChatManager
+from meetbot.interact import Interact
+
+
+async def main():
+    browser = BrowserController()
+    await browser.connect()
+    chat = ChatManager(browser)
+    await chat.init_chat_observer()
+    msg = await chat.get_message()
+    print(msg.user, msg.id, msg.content)
+    await chat.send_message(input("enter the reply:- "))
+
+    interaction = Interact(browser)
+    [
+        await interaction.send_reaction(i)
+        for i in [
+            "heart",
+            "thumbs_up",
+            "tada",
+            "clap",
+            "joy",
+            "surprised",
+            "cry",
+            "thinking",
+            "thumbs_down",
+        ]
+    ]
+
+    await interaction.toggle_camera()
+    await interaction.toggle_hand_raise()
+    print(await interaction.get_peoples())
+    await interaction.share_screen()
+    await interaction.toggle_mic()
+asyncio.run(main())
+```
