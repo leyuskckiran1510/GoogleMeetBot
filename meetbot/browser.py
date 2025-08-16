@@ -52,7 +52,6 @@ class BrowserController:
         while True:
             response = json.loads(await self.ws.recv())
             if response.get("id") == self.msg_id:
-                print(response)
                 return response
 
     async def run_js(self, script: str):
