@@ -1,0 +1,24 @@
+[project]
+name = "meet-bot"
+version = "0.1.0"
+description = "Google Meet bot using Brave + Chrome DevTools Protocol (pychrome)."
+authors = [{ name = "Kiran Raj Dhakal" }]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["httpx","websockets","pydantic",]
+
+[tool.black]
+line-length = 88
+target-version = ["py310"]
+
+[tool.isort]
+profile = "black"
+src_paths = ["meetbot"]
+
+[tool.pyright]
+include = ["meetbot","test*"]
+pythonVersion = "3.10"
+typeCheckingMode = "strict"
+venvPath = "."
+venv = ".venv"
+
